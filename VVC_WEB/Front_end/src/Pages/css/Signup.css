@@ -1,0 +1,128 @@
+.App{
+  text-align: center;
+  background-color: cornflowerblue;
+  width: 100%;
+  height: 100%;
+  position: absolute;
+
+}
+
+
+.body{
+  background-color: cornflowerblue;
+}
+.button {
+  background-color: #4CAF50; /* Green */
+  border: none;
+  color: white;
+  padding: 16px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  transition-duration: 0.4s;
+  cursor: pointer;
+}
+.App1-logo {
+   min-height: 72vh; 
+  width: 40%;
+  margin-right: 70%;
+  margin-bottom: -4px;
+  /* /pointer-events: none;/ */
+  border-radius: 20px 0px 0px 20px;
+ 
+}
+
+::placeholder {
+  color: rgb(68, 68, 127);
+  font-size: 1.5em;
+  font-weight: 500;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  text-align: center;
+
+}
+
+.App1{
+  margin-top: 7%;
+  margin-left: 10%;
+  background-color: #2952a5;
+  width: 80%;
+  color: rgb(14, 13, 13);
+  position: relative;
+  border-radius: 20px;
+  /* border: 6px outset gray; */
+  box-shadow: #ffffff 0px 10px 20px 0px;
+    
+}
+
+.Link{
+  position: absolute; 
+  top: 95%; 
+  left: 76%; 
+  font-size: 65%;
+  color: rgb(199, 225, 248);
+  height: 5%;
+  transform: translate(-50%, -50%);
+}
+.Link1{
+  position: absolute; 
+  top: 67%; 
+  left: 82%; 
+  font-size: 65%;
+  color: rgb(199, 225, 248);
+  height: 5%;
+  transform: translate(-50%, -50%);
+}
+.para{
+  position: absolute; 
+  top: 92.6%; 
+  left: 67%; 
+
+  font-size: 65%;
+  color: rgb(199, 225, 248);
+  height: 5%;
+  transform: translate(-50%, -50%);
+}
+.App1-button{
+  position: absolute; 
+  top: 85%; 
+  left: 70%; 
+  width: 25%;
+  transform: translate(-50%, -50%);
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 4px;
+  padding: 8px 16px;
+  font-size: 16px;
+  cursor: pointer;
+}
+.App1-button:hover {
+  background-color: #0069d9;
+}
+
+.App1-input{
+  position: absolute; 
+  top: 40%; 
+  left: 70%; 
+  width: 35%;
+  transform: translate(-50%, -50%);
+  
+}
+.App1-input2{
+
+  position: absolute; 
+  top: 60%; 
+  left: 70%; 
+  width: 35%;
+  transform: translate(-50%, -50%);
+  
+}
+.siign{
+  position: absolute;
+  width: max-content;
+  transform: translate(-50%, -50%);
+  bottom: 70%;
+  left: 69%; 
+}

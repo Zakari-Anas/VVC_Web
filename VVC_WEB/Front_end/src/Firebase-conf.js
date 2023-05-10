@@ -1,8 +1,12 @@
-import { initializeApp } from "firebase/app";
-import {getAuth,onAuthStateChanged, updateProfile} from "firebase/auth";
-import {getFirestore} from "firebase/firestore";
+
+import {onAuthStateChanged, updateProfile} from "firebase/auth";
+
 import {useState,useEffect} from "react";
-import {getStorage,ref,uploadBytes,getDownloadURL} from 'firebase/storage'
+import {ref,uploadBytes,getDownloadURL} from 'firebase/storage'
+import firebase from 'firebase/compat/app';
+import 'firebase/compat/auth';
+import 'firebase/compat/firestore';
+import 'firebase/compat/storage';
 
 const firebaseConfig = {
   apiKey: "AIzaSyBB9h0_bMcIZoxQ02K5wr63Bwpo_1uXeFA",
@@ -14,11 +18,12 @@ const firebaseConfig = {
   appId: "1:194533806709:web:abfb990b4d66420fac5e3c",
   measurementId: "G-KGHM4YHCD0"
 };
+firebase.initializeApp(firebaseConfig);
 
-const app = initializeApp(firebaseConfig);
-export const db =getFirestore(app);
-const auth= getAuth(app);
-export const storage=getStorage(app);
+const db = firebase.firestore();
+const auth = firebase.auth();
+const storage = firebase.storage();
+
 
 
   
@@ -54,6 +59,6 @@ export const storage=getStorage(app);
 
   }
 
-export {auth};
 
+  export { db, auth, storage };
 

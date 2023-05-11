@@ -1,12 +1,14 @@
 //import logo from './logo.svg';
 import React,{ useState } from "react";
-import logo from './Smart.jpg';
-import './css/Login.css';
+import logo from '../assets/logo.png';
+
 import { useNavigate } from 'react-router-dom';
-import {onAuthStateChanged} from 'firebase/auth';
+
 import {auth} from '../Firebase-conf';
 import { signInWithEmailAndPassword, signOut } from "firebase/auth";
-import { useEffect } from "react";
+
+import 'bootstrap/dist/css/bootstrap.min.css';
+import "./css/Login.css"
 
 
 function Login() {
@@ -48,49 +50,44 @@ function Login() {
 
 
   return (
-    <div className="App">
-     
-     <form onSubmit={login}>
-     <div className="App1">
-     <h1 className="siign">*** SIGN-IN *** </h1>
-     <img src={logo} className="App1-logo" alt="logo" />
-       
-       
-        
-          <input
-            className="App1-input"
-            name='email'
-            type="text"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            placeholder='Email'
-          />
-          <h1>{email}</h1>
-       
-        
-          
-          <input
-            className="App1-input2"
-            name='password'
-            type="password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            placeholder='Password'
-          />
-           <h1>{password}</h1>
-        
-        <button className="App1-button"  type="submit" value="Login">LOGIN</button>
-       
+    
+    
+      <div className="logo-body">
+        <div className=" d-flex justify-content-center align-items-center" style={{ height: "100vh" }}>
+      <div className="login-container rounded p-4 col-md-5 ">
+      <div >
+      <form onSubmit={login} className="container ">
+      <div className="text-center ">
+        <img src={logo} className=" login-logo" alt="logo" />
       </div>
-    </form>
-     
-     
-     
-     
-   
+        
+        <div className="form-group row col-12">
+          <label htmlFor="email" className="col-3 text-center">Email</label>
+          <div className="col-md-9 col-8">
+            <input type="email" className="  form-control login-input" id="email" placeholder="Email" value={email} onChange={(e) => setEmail(e.target.value)} required />
+          </div>
+        </div>
+        <div className="form-group row col-12 mt-3">
+          <label htmlFor="password" className="col-3 text-center">Password</label>
+          <div class="col-md-9 col-8">
+            <input type="password" className=" form-control login-input" id="password" placeholder="Password" value={password} onChange={(e) => setPassword(e.target.value)} required />
+          </div>
+        </div>
+        <div className="form-group row col-11 mt-3">
+          <button type="submit"  className="btn text-white btn-login btn-warning  mt-3 mb-3 offset-3 col-5">Log In</button>
+        </div>
+      </form>
+      <p className="text-center">Don't have an account? <a href="#">Sign up</a></p>
     </div>
+      </div>
+  </div>
+    </div>
+    
+    
     
   );
 }
 
 export default Login;
+
+

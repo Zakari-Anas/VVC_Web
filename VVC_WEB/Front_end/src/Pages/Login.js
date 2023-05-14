@@ -9,6 +9,7 @@ import { signInWithEmailAndPassword, signOut } from "firebase/auth";
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "./css/Login.css"
+import Navbar from "./Navbar";
 
 
 function Login() {
@@ -27,12 +28,9 @@ function Login() {
     e.preventDefault();
 
    try{
-      await signInWithEmailAndPassword(auth,email, password)
-      
-      .then(() => {
-        navigate('/profile');
-      });
-      
+    const userCredential = await signInWithEmailAndPassword(auth, email, password);
+    const uid = userCredential.user.uid; // Retrieve the UID after logging in
+    navigate(`/profile?uid=${uid}`);
     
     }catch(error){
       seterror(true);
@@ -77,7 +75,7 @@ function Login() {
           <button type="submit"  className="btn text-white btn-login btn-warning  mt-3 mb-3 offset-3 col-5">Log In</button>
         </div>
       </form>
-      <p className="text-center">Don't have an account? <a href="#">Sign up</a></p>
+      <p className="text-center">Don't have an account? <a href="/signup">Sign up</a></p>
     </div>
       </div>
   </div>

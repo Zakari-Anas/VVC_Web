@@ -5,7 +5,8 @@ import HomePage from './Pages/HomePage';
 import Profile from "./Pages/Profile";
 import Info from "./Pages/Info";
 import SignUp from "./Pages/SignUp";
-
+import './App.css';
+import ContactUs from "./Pages/ContactUs";
 
 
 function App() { 
@@ -17,7 +18,7 @@ function App() {
             <Routes>
                 <Route exact path="/SignUp" element={<SignUp/>}/>
                 <Route exact path="/" element={<Login />}/>
-              
+                <Route exact path="/contact" element={<ContactUs />}/>
                 <Route exact path="/profile" element={<Profile/>}/>
                 <Route exact path="/home" element={<HomePage/>}/>
                 <Route exact path="/info" element={<Info/>}/>

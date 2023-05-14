@@ -2,7 +2,7 @@
 import {onAuthStateChanged, updateProfile} from "firebase/auth";
 
 import {useState,useEffect} from "react";
-import {ref,uploadBytes,getDownloadURL} from 'firebase/storage'
+import {ref,uploadBytesResumable,getDownloadURL, uploadBytes} from 'firebase/storage'
 import firebase from 'firebase/compat/app';
 import 'firebase/compat/auth';
 import 'firebase/compat/firestore';
@@ -39,24 +39,35 @@ const storage = firebase.storage();
 
   //storage 
 
-  export async function upload(file,currentUser,setLoading){
-
-    const fileRef=ref(storage,currentUser.uid+'.png');
-
-    setLoading(true);
-
-    const  snapshot=await uploadBytes(fileRef,file) 
-
-    const photoURL= await getDownloadURL(fileRef);
-
-
-    updateProfile(currentUser,{photoURL})
-
-    setLoading(false);
-
-    alert('Profile picture set !!!');
-
-
+  export async function upload(file, currentUser, setLoading) {
+    const fileRef = ref(storage, currentUser.uid + '.png'); // Create a reference to the file in Firebase Storage
+    setLoading(true); // Set the loading state to true
+  
+    // Check if the file is not empty
+    if (file.size === 0) {
+      alert('Error: The file is empty.');
+      setLoading(false);
+      return;
+    }
+  
+    // Read the contents of the file and check if it is not empty
+    const fileReader = new FileReader();
+    fileReader.readAsArrayBuffer(file);
+    fileReader.onload = async (event) => {
+      const fileBuffer = event.target.result;
+      if (!fileBuffer) {
+        alert('Error: Failed to read the file.');
+        setLoading(false);
+        return;
+      }
+  
+      const snapshot = await uploadBytes(fileRef, fileBuffer); // Upload the file to Firebase Storage and get a snapshot of the upload progress
+      const photoURL = await getDownloadURL(fileRef); // Get the download URL of the uploaded file
+  
+      
+      setLoading(false); // Set the loading state to false
+      alert('Profile picture set !!!'); // Show a success message to the user
+    };
   }
 
 

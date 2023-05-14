@@ -3,3 +3,37 @@
     width: 100%;
     
 }
+/* Black vertical scrollbar */
+::-webkit-scrollbar {
+    width: 9px;
+    height: 8px;
+    background-color: #000000;
+  }
+  
+  /* Thinner scrollbar thumb */
+  ::-webkit-scrollbar-thumb {
+    border-radius: 3px;
+    background-color: #666666;
+  }
+  
+  /* Hover styles for scrollbar thumb */
+  ::-webkit-scrollbar-thumb:hover {
+    background-color: #999999;
+  }
+  .nav-link.active {
+    color: #b99c0b !important;
+   
+  }
+  .nav-item{
+    text-align: right;
+    
+  }
+
+ 
+    
+  @media screen and (max-width: 1000px ) {
+    .menu-navbar{
+      text-align: right;
+      background-color: #212529a3 ;
+    }
+  }

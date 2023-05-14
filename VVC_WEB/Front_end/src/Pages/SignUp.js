@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import logo from '../assets/logo.png';
-import defaultProfilePic from '../assets/DefaultProfilePic.jpg';
+import defaultProfilePic from '../assets/defaultProfilePic.jpg';
 import './css/Signup.css';
 import { auth, db, storage } from "../Firebase-conf";
 import { useNavigate } from 'react-router-dom';
@@ -17,72 +17,86 @@ const SignUp = () => {
   const [password, setPassword] = useState("");
   const [Confirmpassword, setConfirmPassword] = useState("");
   const [email, setEmail] = useState("");
-  const [gender, setGender] = useState("");
+  const [uid, setUid] = useState("");
   const [phone, setPhone] = useState("");
   const [birthday, setBirthday] = useState("");
   const [location, setLocation] = useState("");
   const [image, setImage] = useState(defaultProfilePic);
+  const [imgFile, setImgFile] = useState(new File([], ""));
   const [url, setUrl] = useState(null);
+  
 
   // uploading image
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     const reader = new FileReader();
+    
+    setImgFile(file);
     reader.onloadend = () => {
       setImage(reader.result);
-      console.log(image);
+      
     };
     if (file) {
       reader.readAsDataURL(file);
     }
   };
-  const handleSubmit = () => {
-    const imageRef = ref(storage, `${username}`);
-    uploadBytes(imageRef, image)
-      .then(() => {
-        getDownloadURL(imageRef)
-          .then((url) => {
-            setUrl(url);
-          })
-          .catch((error) => {
-            console.log(error.message, "error getting the image url");
-          });
-        setImage(null);
-      })
-      .catch((error) => {
-        console.log(error.message);
-      });
-  };
-
+ 
 
   //------------------------------------------
   const signup = (e) => {
     e.preventDefault();
     setLoader(true);
-    if (!username || !email || !password) {
+    if (!username || !email || !password || !phone) {
       return alert("Please enter a username, email, and password");
-    };
-
-    auth.createUserWithEmailAndPassword(email, password)
-      .then(userAuth => {
-        const uid = userAuth.user.uid;
+    }
+    if (password !== Confirmpassword) {
+     
+      return  alert("Passwords do not match. Please try again.");;
+    }
+  
+    auth
+      .createUserWithEmailAndPassword(email, password)
+      .then((userAuth) => {
+        setTimeout(500);
         // Create a new user document in Firestore with the user's data
-        db.collection("Utilisateur").add({
-          uid: uid, // set the uid field to the uid of the created user
-          username,
-          email,
-          gender,
-          phone,
-          birthday,
-          location,
-        })
-
+        db.collection("Utilisateur")
+          .doc(userAuth.user.uid)
+          .set({
+            username,
+            email,
+            phone,
+            birthday,
+            location,
+            password,
+          })
           .then(() => {
-            navigate('/home')
+            // Upload the image to Firebase Storage
+            const imageRef = ref(storage, `${userAuth.user.uid}.png`);
+            uploadBytes(imageRef, imgFile)
+              .then(() => {
+                getDownloadURL(imageRef)
+                  .then((url) => {
+                    setUrl(url);
+                  })
+                  .catch((error) => {
+                    console.log(error.message, "error getting the image url");
+                  });
+                setImage(null);
+                console.log("paoziepaoziepo",userAuth.user.uid);
+                navigate(`/profile?uid=${userAuth.user.uid}`);
+              })
+              .catch((error) => {
+                console.log(error.message, "error uploading the image");
+              });
+          })
+          .catch((error) => {
+            console.log(error.message, "error creating user document", error);
           });
+      })
+      .catch((error) => {
+        console.log(error.message, "error creating user", error);
       });
-  }
-
+  };
 
   return (
     <div className="signup-body vh-100 py-md-3">
@@ -165,7 +179,7 @@ const SignUp = () => {
               </a>
               </div>
               <div className="col-md-6 col-6" >
-              <button type="submit" onClick={handleSubmit} className="btn btn-warning btn-signup mt-md-1 mb-md-1 col-md-8 col-12">Register</button>
+              <button type="submit" className="btn btn-warning btn-signup mt-md-1 mb-md-1 col-md-8 col-12">Register</button>
 
               </div>
             </div>

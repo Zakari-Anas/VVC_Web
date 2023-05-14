@@ -2,34 +2,78 @@ import React, { useEffect } from "react";
 import "./css/Profile.css";
 import { useState } from "react";
 import { Link } from 'react-router-dom';
-import HomePage from "./HomePage";
-import { useNavigate } from 'react-router-dom';
+import { useNavigate,useLocation } from 'react-router-dom';
+import {ref,getDownloadURL} from 'firebase/storage'
 import {useAuth,upload } from '../Firebase-conf';
-
+import 'bootstrap/dist/css/bootstrap.min.css';
+import { db } from '../Firebase-conf';
+import { storage } from '../Firebase-conf';
+import { Button, Modal } from 'react-bootstrap';
+import Navbar from "./Navbar";
 
 function Profile(){
-
+    const location = useLocation();
+    const searchParams = new URLSearchParams(location.search);
+    const uid = searchParams.get("uid");
     const currentUser=useAuth();
+    const [userData, setUserData] = useState(null);
+    const [imageUrl, setImageURL] = useState();
+    const[loading,setLoading]=useState(false)
+    const [isOpen, setIsOpen] = useState(false);
+    const [photo, setPhoto] = useState("https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg");
+
+    const getUserData = async (docName) => {
+      try {
+        const userRef = db.collection('Utilisateur').doc(docName);
+        const userData = await userRef.get();
+        if (userData.exists) {
+          return userData.data();
+        } else {
+          alert('There was an error fetching user data');
+          navigate('/');  
+        }
+      } catch (error) {
+        console.log('Error getting document:', error);
+      }
+    };
+    const getImageURL = async () => {
+      try {
+        // (`${uid}.png`)
+        
+        const url = await storage.ref().child(`${uid}.png`).getDownloadURL();
+        setPhoto(url);
+        
+      } catch (error) {
+        console.log('Error getting image URL:', error);
+      }
+    }
     
-const [info,setInfo]=useState([]);
-const [nomPrenom,setNomPrenom]=useState([]);
-const [info2,setInfo2]=useState([]);
+    const getUserInfo = async () => {
+      const data = await getUserData(uid);
+      setUserData(data);
+      getImageURL();
+    };
+  
+    useEffect(() => {
+      getUserInfo();
+    }, []);
+
+ 
 
 
-const [photo, setPhoto] = useState(null);
-const[loading,setLoading]=useState(false)
-const [imageUrl, setImageUrl] = useState("https://t3.ftcdn.net/jpg/03/46/83/96/360_F_346839683_6nAPzbhpSkIpb8pmAwufkC7c5eD7wYws.jpg");
-
-const [imageURL, setImageURL] = useState("");
-const [isOpen, setIsOpen] = useState(false);
-
-  function handleClick() {
-    fetch("https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://localhost:3000/info&qzone=1")
+  
+    useEffect(() => {
+      fetch("https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://localhost:3000/info&qzone=1")
       .then((response) => response.blob())
       .then((blob) => {
-        setImageURL(URL.createObjectURL(blob));
+        
+      setImageURL(URL.createObjectURL(blob));
       });
       setIsOpen(!isOpen);
+    }, []);
+
+  function handleClick() {
+    
   }
 
 const navigate= useNavigate();  
@@ -40,130 +84,131 @@ const navigation=()=>{
 }
 
 
-const handleChange = (event) => {
+useEffect(() => {
+  const photoURL = getDownloadURL(ref(storage, `${uid}.png`));
+  setPhoto(photoURL);
+}, [currentUser]);
 
-    if(event.target.files[0]){
-      setPhoto(event.target.files[0]);
-    }
+const handleChange = async (event) => {
+  if (event.target.files[0]) {
+    setPhoto(URL.createObjectURL(event.target.files[0]));
+    event.preventDefault();
+    await upload(event.target.files[0], currentUser, setLoading);
   }
+};
 
+const [showModal, setShowModal] = useState(false);
 
-
-   useEffect(()=>{
-        
-        if(currentUser?.photoURL){
-            setNomPrenom([{Nom:"Taoui",Prenom:"Ranya"}])
-            setInfo2([{TT:"0525252525",GP:"06911907530000",Tele:"069119075300000",Adresse:"Marrakech",Gmail:"ranyataoui@outlook.com",TF:"0525252525",AT:"Marrakech"}]) 
-            setImageUrl(currentUser.photoURL )
-          }
-  
-   },[currentUser])
-
-   const handleAdd=async(e)=>{
-
-    e.preventDefault();
-    upload(photo,currentUser,setLoading);
+  const handleGenerateQRCode = () => {
+    setShowModal(true);
+  };
+  function handleDownloadQRCode() {
+    const qrCodeImg = document.querySelector('.qr-code img');
+    const link = document.createElement('a');
+    link.download = '~/Downloads/QR Codes/qr-code.png';
+    link.href = qrCodeImg.src;
+    link.click();
   }
+ return(
+  <div className="profile-body justify-content-center min-vh-100">
+      <Navbar/>
 
+    <div className="container ">
+      <div className="row justify-content-center">
+        <div className=" col-8 profile-card">
 
-   
-    return(
-        <div className="container">
-        <div className="row">
-        </div>  
-        <img  src={imageUrl} alt="Avatar" className="avatar"/> 
-      
-            <form className="imageset" onSubmit={handleAdd}>     
-                    <div className="nom"> {currentUser?.email}</div>
-                     <input type="file" onChange={handleChange}/>
-                     <button disable={loading || photo==null} type="submit" >Changer Photo</button>
-            </form> 
-         
-            
+          {/* src={imageUrl} 
+          <FaCamera color="blue" />*/}
+          <div className="d-flex flex-column align-items-center" onClick={() => document.getElementById('inputImage').click()}>
+                <div className="position-relative" >
+                <img src={photo} alt="Profile" className="rounded-circle" width="150" height="150" key={photo} />
+                
+                  <input type="file" name="image" id="inputImage" onChange={handleChange} className="d-none" />
+                </div>
+                <button type="button" className="btn btn-link mt-1" >
+                  Change Profile
+                </button>
+              </div>
+              <Modal  show={showModal} onHide={() => setShowModal(false)}   centered>
+                <Modal.Header style={{ backgroundColor: "#d3b419" }} closeButton>
+                  <Modal.Title>Share Your Profile</Modal.Title>
+                </Modal.Header>
+                <Modal.Body style={{ backgroundColor: "#212529" }}>
+                  <div className="d-flex justify-content-center">
+                    <div className="qr-code">
+                      <img src={imageUrl} alt="QR Code" />
+                    </div>
+                  </div>
+                  <div className="d-flex justify-content-center mt-3">
+                    <button className="btn text-white btn-profile btn-warning" onClick={handleDownloadQRCode}>Download QR Code</button>
+                  </div>
+                </Modal.Body>
+              </Modal>
+             
+        </div>
+        <div className=" col-8 profile-card">
+      <h3 className="text-center mb-5">{userData?.username}'s profile</h3>
+
+          <div className="profile-info">
+            <h2 className="text-primary"> </h2>
+            <table className="table table-hover">
+              <tbody>
+              <tr>
+                  <td>Name</td>
+                  <td>{userData?.username}</td>
+                </tr>
+                <tr>
+                  <td>Email</td>
+                  <td>{userData?.email}</td>
+                </tr>
+                <tr>
+                  <td>day of birth</td>
+                  <td>{userData?.birthday}</td>
+                </tr>
+                <tr>
+                  <td>Phone number</td>
+                  <td>{userData?.phone}</td>
+                </tr>
+                
+                
+                <tr>
+                  <td>Password</td>
+                  <td>{userData?.password}</td>
+                </tr>
+              </tbody>
+            </table>
             
            
-
-            <div className="inf2">
-
-                {info2.map((value, key) => (
-                     <div key={key} className="Info2">
-                        
-                     <div> <input type="checkbox"  name="vehicle1" value="Telephone-Travail"></input> Telephone-Travail:  {value.TT }</div><br></br>
-                    <div> <input type="checkbox" name="Gmail-Professionnelle" value="Gmail-Professionnelle"></input> Gmail-Professionnelle:  {value.GP}</div><br></br>
-                    <div> <input type="checkbox" name="Gmail-Professionnelle" value="Gmail-Professionnelle"></input> Gmail-Professionnelle:  {value.GP}</div><br></br>
-                    <div> <input type="checkbox" name="Gmail-Professionnelle" value="Gmail-Professionnelle"></input> Gmail-Professionnelle:  {value.GP}</div><br></br>
-                    <div> <input type="checkbox" name="Gmail-Professionnelle" value="Gmail-Professionnelle"></input> Gmail-Professionnelle:  {value.GP}</div><br></br>
-                    <div> <input type="checkbox" name="Gmail-Professionnelle" value="Gmail-Professionnelle"></input> Telephone-Personnel:  {value.Tele}</div><br></br>
-                    <div> <input type="checkbox" name="Gmail-Professionnelle" value="Gmail-Professionnelle"></input> Adresse:  {value.Adresse}</div><br></br>
-                    <div> <input type="checkbox" name="Gmail-Professionnelle" value="Gmail-Professionnelle"></input> Gmail:  {value.Gmail}</div><br></br>
-                    <div> <input type="checkbox" name="Gmail-Professionnelle" value="Gmail-Professionnelle"></input> Telephone-Fix:  {value.TF}</div><br></br>
-                    <div> <input type="checkbox" name="Gmail-Professionnelle" value="Gmail-Professionnelle"></input> Adresse-Travail:  {value.AT}</div><br></br>
-                    <div> <input type="checkbox" name="Gmail-Professionnelle" value="Gmail-Professionnelle"></input> Adresse-Travail:  {value.AT}</div><br></br>
-                    <div> <input type="checkbox" name="Gmail-Professionnelle" value="Gmail-Professionnelle"></input> Adresse-Travail:  {value.AT}</div><br></br>
-                    <div> <input type="checkbox" name="Gmail-Professionnelle" value="Gmail-Professionnelle"></input> Adresse-Travail:  {value.AT}</div><br></br>
-                    <div> <input type="checkbox" name="Gmail-Professionnelle" value="Gmail-Professionnelle"></input> Adresse-Travail:  {value.AT}</div><br></br>
-                     </div>
-                     
-                ))}
-                <br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br><br></br>
+            <div className="mt-5 d-flex justify-content-center">
+              <Link to="/edit-profile" className="btn text-white btn-edit btn-warning mx-5">Edit Profile</Link>
+              <button className="btn text-white btn-profile btn-warning mx-5" onClick={handleGenerateQRCode}>Generate QR Code</button>
             </div>
-           
-            
-       
-<div className="map"> 
+                        
+          </div>
+        </div>
+        <div className=" col-8 profile-card d-flex justify-content-center align-items-center">
 
 <iframe src="/Home"
- width="100%"
- height="100%"
- style={{ border: "0" }}
- allowfullscreen=""
- loading="lazy"
- 
+  width="95%"
+  height="95%"
+  style={{ border: "5px solid black" }}
+  allowfullscreen=""
+  loading="lazy"
+
 >
-  
+
 
 </iframe>
 
-<button className="lien-maps"  onClick={navigation}>Positionnement</button>
+
 
 </div>
-
-<div className="App1-button-div" ><button className="App1-button" type="submit" value="PARTAGER" onClick={handleClick}>PARTAGER</button>{imageURL && 
-      <div>
-        {/* <img src={imageURL} alt={"Fetched Image"}/> */}
-  
-        {isOpen && (
-          <div className="modal">
-            <div className="modal-content">
-              <span className="close" onClick={handleClick}>
-                &times;
-              </span>
-              <img src={imageURL} alt={"Fetched Image"} />
-            </div>
-          </div>
-        )}
-      </div>}</div>
-<div className="App2-button-div" ><button className="App1-button2" type="submit" value="Modifier">Modifier</button></div>
-
-
-{/* <footer className="footer">
-<Link className="About-us">About us</Link>
-<Link className="Contact-us">Contact us</Link>
-<Link className="Help">Help</Link> 
-<p className="Contact-us">Contact us</p>
-<p className="Help">Help</p>
- </footer> */}
-
-<footer className="footer">
-<Link className="About-us">About us</Link>
-<Link className="Contact-us">Contact us</Link>
-<Link className="Help">Help</Link> 
-<p className="Contact-us">Contact us</p>
-<p className="Help">Help</p>
- </footer>
-
-        </div>
-    )
+      </div>
+      
+    </div>
+  </div>
+    
+  );
     
 }
 

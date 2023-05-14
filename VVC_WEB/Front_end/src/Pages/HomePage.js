@@ -6,7 +6,7 @@ import usePlacesAutocomplete,{getGeocode,getLatLng}from "use-places-autocomplete
 import{Combobox,ComboboxInput,ComboboxPopover,ComboboxList,ComboboxOption} from "@reach/combobox";
 import "@reach/combobox/styles.css";
 import { useState } from "react";
-
+import Navbar from "./Navbar";
 function HomePage() {
 
     const {isloaded}=useJsApiLoader({
@@ -20,7 +20,7 @@ function HomePage() {
             
         return(
                
-            <div>Loading...</div>   
+            <div> Loading...</div>   
                 
         )
             
@@ -28,7 +28,7 @@ function HomePage() {
 
     else{
         return (
-            <div><Map/></div>
+            <div><Navbar/> <Map /></div>
         )
     }
     
@@ -47,8 +47,9 @@ function Map(){
     return ( 
 
         <>
+         
         <div className="search">
-
+           
             {/* <PlacesAutocomplete setSelected={setSelected}/> */}
         </div>
         <GoogleMap 

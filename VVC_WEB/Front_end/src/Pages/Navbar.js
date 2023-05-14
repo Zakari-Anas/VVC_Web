@@ -24,7 +24,7 @@ const Navbar = () => {
   };
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark  fixed-top" style={{ backgroundColor: "#21252944", height: "90px", paddingLeft: "20px", paddingRight: "30px" }}>
+    <nav className="navbar navbar-expand-lg navbar-dark  fixed-top" style={{ backgroundColor: "#F5EAB655", height: "70px", paddingLeft: "20px", paddingRight: "30px" }}>
       <div className="container-fluid menu-navbar">
         <Link className="navbar-brand" to="/">
           <img src={logo} className="login-logo" alt="logo" style={{ height: "90px" }} />
@@ -42,30 +42,22 @@ const Navbar = () => {
           <span className="navbar-toggler-icon"></span>
         </button>
         {showMenu && (
-          <div className="navbar-collapse">
+          <div  className="navbar-collapse">
             <ul className="navbar-nav ms-auto">
               <li className="nav-item">
-                <NavLink exact className="nav-link" activeClassName="active" to="/home">
+                <NavLink  exact className="nav-link" activeClassName="active" to="/home">
                   Home
                 </NavLink>
               </li>
+              
               <li className="nav-item">
-                <NavLink className="nav-link" activeClassName="active" to="/about">
-                  About
-                </NavLink>
-              </li>
-              <li className="nav-item">
-                <NavLink className="nav-link" activeClassName="active" to={`/profile?uid=${user?.uid}`}>
+                <NavLink  className="nav-link" activeClassName="active" to={`/profile?uid=${user?.uid}`}>
                   Profile
                 </NavLink>
               </li>
+              
               <li className="nav-item">
-                <NavLink className="nav-link" activeClassName="active" to="/contact">
-                  Contact
-                </NavLink>
-              </li>
-              <li className="nav-item">
-                <NavLink className="nav-link" activeClassName="active" to="/">
+                <NavLink  className="nav-link text-danger" activeClassName="active" to="/">
                   Logout
                 </NavLink>
               </li>

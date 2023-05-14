@@ -24,8 +24,20 @@
     color: #b99c0b !important;
    
   }
+  .nav-link  {
+    font-size: 19px;
+    margin-left: 20px;
+    color:#fff;
+  }
+  .nav-link:hover{  
+    font-size: 23px;
+    color:#fff;
+  }
+
+
   .nav-item{
     text-align: right;
+    
     
   }
 

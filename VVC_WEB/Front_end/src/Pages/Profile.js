@@ -10,6 +10,10 @@ import { db } from '../Firebase-conf';
 import { storage } from '../Firebase-conf';
 import { Button, Modal } from 'react-bootstrap';
 import Navbar from "./Navbar";
+import CryptoJS from 'crypto-js';
+
+
+
 
 function Profile(){
     const location = useLocation();
@@ -58,12 +62,14 @@ function Profile(){
       getUserInfo();
     }, []);
 
- 
+    const secretKey = 'dkchidylsecurite@1'; // Replace with your secret key
+
+    const encryptedUid = CryptoJS.AES.encrypt(uid, secretKey).toString();
 
 
   
     useEffect(() => {
-      fetch("https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://localhost:3000/info&qzone=1")
+      fetch("https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://localhost:3000/info?uid="+encryptedUid+"")
       .then((response) => response.blob())
       .then((blob) => {
         
@@ -147,7 +153,7 @@ const [showModal, setShowModal] = useState(false);
              
         </div>
         <div className=" col-8 profile-card">
-      <h3 className="text-center mb-5">{userData?.username}'s profile</h3>
+      <h3 className="text-center mb-5" style={{color: "#d3b419"}}>{userData?.username}'s profile</h3>
 
           <div className="profile-info">
             <h2 className="text-primary"> </h2>

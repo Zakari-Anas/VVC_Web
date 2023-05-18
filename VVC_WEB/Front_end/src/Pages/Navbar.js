@@ -3,11 +3,18 @@ import { Link, NavLink } from "react-router-dom";
 import logo from "../assets/logo.png";
 import { useAuth } from "../Firebase-conf";
 import { useEffect } from "react";
+import {auth} from '../Firebase-conf';
+import { signOut } from "firebase/auth";
 
 const Navbar = () => {
   const user = useAuth();
   const [showMenu, setShowMenu] = useState(false);
-
+  const logout = async (e) => {
+   
+    await signOut(auth);
+   
+ };
+   
   useEffect(() => {
     const mediaQuery = window.matchMedia("(min-width: 768px)");
     setShowMenu(mediaQuery.matches);
@@ -57,7 +64,7 @@ const Navbar = () => {
               </li>
               
               <li className="nav-item">
-                <NavLink  className="nav-link text-danger" activeClassName="active" to="/">
+                <NavLink  onClick={logout} className="nav-link text-danger" activeClassName="active" to="/">
                   Logout
                 </NavLink>
               </li>

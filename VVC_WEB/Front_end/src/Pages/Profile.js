@@ -65,11 +65,13 @@ function Profile(){
     const secretKey = 'dkchidylsecurite@1'; // Replace with your secret key
 
     const encryptedUid = CryptoJS.AES.encrypt(uid, secretKey).toString();
+    const encodedEncryptedUid = encodeURIComponent(encryptedUid); // URL-safe Base64 encoding
+
 
 
   
     useEffect(() => {
-      fetch("https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://localhost:3000/info?uid="+encryptedUid+"")
+      fetch("https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=http://localhost:3000/info?uid="+encodedEncryptedUid+"")
       .then((response) => response.blob())
       .then((blob) => {
         

@@ -9,7 +9,6 @@ import { signInWithEmailAndPassword, signOut } from "firebase/auth";
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import "./css/Login.css"
-import Navbar from "./Navbar";
 
 
 function Login() {

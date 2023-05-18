@@ -2,8 +2,6 @@ import React from "react";
 import { useMemo } from "react";
 import {GoogleMap,useLoadScript,Marker,useJsApiLoader} from "@react-google-maps/api";
 import "./css/homePage.css";
-import usePlacesAutocomplete,{getGeocode,getLatLng}from "use-places-autocomplete";
-import{Combobox,ComboboxInput,ComboboxPopover,ComboboxList,ComboboxOption} from "@reach/combobox";
 import "@reach/combobox/styles.css";
 import { useState } from "react";
 import Navbar from "./Navbar";
@@ -28,7 +26,7 @@ function HomePage() {
 
     else{
         return (
-            <div><Navbar/> <Map /></div>
+            <div> <Map /></div>
         )
     }
     

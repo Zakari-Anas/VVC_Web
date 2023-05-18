@@ -1,20 +1,19 @@
 import React, { useEffect } from "react";
 import "./css/Profile.css";
 import { useState } from "react";
-import { Link } from 'react-router-dom';
 import { useNavigate,useLocation } from 'react-router-dom';
 import {ref,getDownloadURL} from 'firebase/storage'
 import {useAuth,upload } from '../Firebase-conf';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { db } from '../Firebase-conf';
 import { storage } from '../Firebase-conf';
-import { Button, Modal } from 'react-bootstrap';
 import Navbar from "./Navbar";
 import CryptoJS from 'crypto-js'; 
 function Info(){
     const location = useLocation();
     const searchParams = new URLSearchParams(location.search);
-    const encryptedUid = searchParams.get("uid");
+    const encodedEncryptedUid = searchParams.get("uid");
+    const encryptedUid = decodeURIComponent(encodedEncryptedUid);
     const secretKey = 'dkchidylsecurite@1'; // Replace with your secret key
     const bytes = CryptoJS.AES.decrypt(encryptedUid, secretKey);
     const uid = bytes.toString(CryptoJS.enc.Utf8);

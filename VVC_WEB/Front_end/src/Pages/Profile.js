@@ -8,7 +8,7 @@ import {useAuth,upload } from '../Firebase-conf';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { db } from '../Firebase-conf';
 import { storage } from '../Firebase-conf';
-import { Button, Modal } from 'react-bootstrap';
+import {  Modal } from 'react-bootstrap';
 import Navbar from "./Navbar";
 import CryptoJS from 'crypto-js';
 
@@ -196,17 +196,17 @@ const [showModal, setShowModal] = useState(false);
         </div>
         <div className=" col-8 profile-card d-flex justify-content-center align-items-center">
 
-<iframe src="/Home"
-  width="95%"
-  height="95%"
-  style={{ border: "5px solid black" }}
-  allowfullscreen=""
-  loading="lazy"
+                <iframe src="/Map"
+                  width="95%"
+                  height="95%"
+                  style={{ border: "5px solid black" }}
+                  allowfullscreen=""
+                  loading="lazy"
 
->
+                >
 
 
-</iframe>
+                </iframe>
 
 
 

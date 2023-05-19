@@ -2,6 +2,7 @@ import React from "react";
 import { BrowserRouter as Router, Route, Routes,Navigate} from "react-router-dom";
 import Login from "./Pages/Login";
 import HomePage from './Pages/HomePage';
+import Maps from "./Pages/Map";
 import Profile from "./Pages/Profile";
 import Info from "./Pages/Info";
 import SignUp from "./Pages/SignUp";
@@ -21,6 +22,7 @@ function App() {
                 <Route exact path="/contact" element={<ContactUs />}/>
                 <Route exact path="/profile" element={<Profile/>}/>
                 <Route exact path="/home" element={<HomePage/>}/>
+                <Route exact path="/map" element={<Maps/>}/>
                 <Route exact path="/info" element={<Info/>}/>
 
             </Routes>
